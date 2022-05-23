@@ -3,6 +3,17 @@ from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
 
+# TODO
+# - create config parser for api key
+# - as in test.py create frames for buttons to work
+# - figure out better way to display channel icons, maybe get them from somewhere else, not downlaod manually
+
+# FURTHER TODO
+# - enable to input your own yt channels
+# - some kind of login system
+# - liked or marked channels
+# - marked watched videos => figure out a way to limit api invocations, save already downloaded data somewhere
+
 API_KEY = 'AIzaSyC-nrN3dQG2myUiOVRW7uOeCMib-YnJ344'
 ekipa_wk_id = 'UCnvrd6z-UgyX0n-Db7sQI4Q'
 wk_dzik_pl_id = 'UCUr1w6sHtgj1JniKV8vWXMw'
@@ -22,8 +33,8 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 
 class App(customtkinter.CTk):
 
-    WIDTH = 780
-    HEIGHT = 520
+    WIDTH = 920
+    HEIGHT = 720
 
     def __init__(self):
         super().__init__()
@@ -86,7 +97,7 @@ class App(customtkinter.CTk):
         self.frame_right.columnconfigure(2, weight=0)
 
         # ============ frame_right ============
-        image_size = 100
+        image_size = 150
         wk_kuchnia_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_kuchnia.jpg").resize((image_size, image_size), Image.ANTIALIAS))
         wk_dzik_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_wkdzik.pl.jpg").resize((image_size, image_size), Image.ANTIALIAS))
         wk_gaming_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/wkgaming.jpg").resize((image_size, image_size), Image.ANTIALIAS))
