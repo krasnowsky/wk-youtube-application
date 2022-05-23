@@ -4,6 +4,7 @@ from tokenize import String
 
 @dataclass
 class video:
+    id: string
     url: string
     thumbnail: string
     published_at: string
