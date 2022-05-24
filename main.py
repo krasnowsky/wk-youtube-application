@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 import config_parser
 
 # TODO
-# - create config parser for api key
 # - as in test.py create frames for buttons to work
 # - figure out better way to display channel icons, maybe get them from somewhere else, not downlaod manually
 
@@ -22,11 +21,14 @@ warszawski_koks_id = 'UC2AyohFiDUS3K98h5dJVfog'
 kuchnia_wk_id = 'UC4TYJ_RcqwL9lAZgkQlk11g'
 wk_gaming_id = 'UCeLWHfuhwnObampm0M6oH4w'
 
-yt = youtube_api(API_KEY, warszawski_koks_id, 1)
-yt.get_channel_video_data()
+debug = True
 
-for vid in yt.videos:
-    print(vid)
+if not debug:
+    yt = youtube_api(API_KEY, warszawski_koks_id, 1)
+    yt.get_channel_video_data()
+
+    for vid in yt.videos:
+        print(vid)
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -44,6 +46,14 @@ class App(customtkinter.CTk):
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
 
         self.protocol("WM_DELETE_WINDOW", self.on_closing)  # call .on_closing() when app gets closed
+
+        # =========== read logo images ==============
+        image_size = 150
+        wk_kuchnia_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_kuchnia.jpg").resize((image_size, image_size), Image.ANTIALIAS))
+        wk_dzik_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_wkdzik.pl.jpg").resize((image_size, image_size), Image.ANTIALIAS))
+        wk_gaming_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/wkgaming.jpg").resize((image_size, image_size), Image.ANTIALIAS))
+        ekipa_wk_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_ekipawk.jpg").resize((image_size, image_size), Image.ANTIALIAS))
+        warszawski_koks_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/warszawski_koks.jpg").resize((image_size, image_size), Image.ANTIALIAS))
 
         # ============ create two frames ============
 
@@ -98,34 +108,29 @@ class App(customtkinter.CTk):
         self.frame_right.columnconfigure(2, weight=0)
 
         # ============ frame_right ============
-        image_size = 150
-        wk_kuchnia_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_kuchnia.jpg").resize((image_size, image_size), Image.ANTIALIAS))
-        wk_dzik_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_wkdzik.pl.jpg").resize((image_size, image_size), Image.ANTIALIAS))
-        wk_gaming_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/wkgaming.jpg").resize((image_size, image_size), Image.ANTIALIAS))
-        ekipa_wk_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/dzik_ekipawk.jpg").resize((image_size, image_size), Image.ANTIALIAS))
-        warszawski_koks_logo = ImageTk.PhotoImage(Image.open("/Users/krasnowsky/wk_youtube/assets/logos/warszawski_koks.jpg").resize((image_size, image_size), Image.ANTIALIAS))
+        buttons_height = 200
 
-        button_1 = customtkinter.CTkButton(master=self.frame_right, image=wk_gaming_logo, text="WK Gaming", width=130, height=70, border_width=0,
-                                        corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
+        button_1 = customtkinter.CTkButton(master=self.frame_right, image=wk_gaming_logo, text="WK Gaming", width=130, height=buttons_height, border_width=0,
+                                        corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78", command=self.button_event
                                         )
         button_1.grid(row=0, column=0, columnspan=1, padx=20, pady=10, sticky="ew")
 
-        button_2 = customtkinter.CTkButton(master=self.frame_right, image=ekipa_wk_logo, text="Ekipa WK", width=130, height=70, border_width=0,
+        button_2 = customtkinter.CTkButton(master=self.frame_right, image=ekipa_wk_logo, text="Ekipa WK", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
         button_2.grid(row=0, column=1, columnspan=1, padx=20, pady=10, sticky="ew")
 
-        button_3 = customtkinter.CTkButton(master=self.frame_right, image=warszawski_koks_logo, text="Warszawski Koks", width=130, height=70, border_width=0,
+        button_3 = customtkinter.CTkButton(master=self.frame_right, image=warszawski_koks_logo, text="Warszawski Koks", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
         button_3.grid(row=1, column=0, columnspan=1, padx=20, pady=10, sticky="ew")
 
-        button_4 = customtkinter.CTkButton(master=self.frame_right, image=wk_kuchnia_logo, text="Kuchnia WK", width=130, height=70, border_width=0,
+        button_4 = customtkinter.CTkButton(master=self.frame_right, image=wk_kuchnia_logo, text="Kuchnia WK", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
         button_4.grid(row=1, column=1, columnspan=1, padx=20, pady=10, sticky="ew")
 
-        button_5 = customtkinter.CTkButton(master=self.frame_right, image=wk_dzik_logo, text="WK DZIK", width=130, height=70, border_width=0,
+        button_5 = customtkinter.CTkButton(master=self.frame_right, image=wk_dzik_logo, text="WK DZIK", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
         button_5.grid(row=2, column=0, columnspan=1, padx=20, pady=10, sticky="ew")
