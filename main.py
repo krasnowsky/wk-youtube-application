@@ -1,10 +1,9 @@
-from helper import youtube_api
 from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
-import config_parser
 import scrollable_frame
 import webbrowser
+
 
 # TODO
 # - figure out better way to display channel icons, maybe get them from somewhere else, not downlaod manually
@@ -14,24 +13,6 @@ import webbrowser
 # - some kind of login system
 # - liked or marked channels
 # - marked watched videos => figure out a way to limit api invocations, save already downloaded data somewhere
-
-API_KEY = config_parser.api_key
-ekipa_wk_id = 'UCnvrd6z-UgyX0n-Db7sQI4Q'
-wk_dzik_pl_id = 'UCUr1w6sHtgj1JniKV8vWXMw'
-warszawski_koks_id = 'UC2AyohFiDUS3K98h5dJVfog'
-kuchnia_wk_id = 'UC4TYJ_RcqwL9lAZgkQlk11g'
-wk_gaming_id = 'UCeLWHfuhwnObampm0M6oH4w'
-
-channel_names = ['Ekipa WK', 'WK Dzik', 'Warszawski Koks', 'Kuchnia WK', 'WK Gaming']
-
-debug = True
-
-if not debug:
-    yt = youtube_api(API_KEY, wk_gaming_id, 1)
-    yt.get_channel_video_data()
-
-    for vid in yt.videos:
-        print(vid)
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 
