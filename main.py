@@ -24,7 +24,7 @@ wk_gaming_id = 'UCeLWHfuhwnObampm0M6oH4w'
 debug = True
 
 if not debug:
-    yt = youtube_api(API_KEY, warszawski_koks_id, 1)
+    yt = youtube_api(API_KEY, wk_gaming_id, 1)
     yt.get_channel_video_data()
 
     for vid in yt.videos:
@@ -36,7 +36,7 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 
 class App(customtkinter.CTk):
 
-    WIDTH = 920
+    WIDTH = 1280
     HEIGHT = 720
 
     def __init__(self):
@@ -85,13 +85,13 @@ class App(customtkinter.CTk):
         self.button_1 = customtkinter.CTkButton(master=self.frame_left,
                                                 text="Newest videos",
                                                 fg_color=("gray75", "gray30"),  # <- custom tuple-color
-                                                command=self.button_event)
+                                                command=lambda:self.raise_frame(f2))
         self.button_1.grid(row=2, column=0, pady=10, padx=20)
 
         self.button_2 = customtkinter.CTkButton(master=self.frame_left,
                                                 text="Channels",
                                                 fg_color=("gray75", "gray30"),  # <- custom tuple-color
-                                                command=self.button_event)
+                                                command=lambda:self.raise_frame(self.frame_right))
         self.button_2.grid(row=3, column=0, pady=10, padx=20)
 
         self.switch_2 = customtkinter.CTkSwitch(master=self.frame_left,
@@ -101,44 +101,53 @@ class App(customtkinter.CTk):
 
         # ============ frame_right ============
 
-        # configure grid layout (3x7)
-        self.frame_right.rowconfigure((0, 1, 2, 3), weight=1)
-        self.frame_right.rowconfigure(7, weight=10)
-        self.frame_right.columnconfigure((0, 1), weight=1)
-        self.frame_right.columnconfigure(2, weight=0)
-
+        f2 = customtkinter.CTkFrame(master=self)
+        f2.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
+        f2.columnconfigure(0, weight = 1)
         # ============ frame_right ============
-        buttons_height = 200
+
+        for i in range(10):
+            button = customtkinter.CTkButton(master=f2, text='newest videos', height = 200)
+            button.grid(row=i, column=0, sticky = 'nswe', padx=10, pady=10)
+
+
+        buttons_height = 150
+
+        self.frame_right.rowconfigure((0, 1, 2), weight = 1)
+        self.frame_right.columnconfigure((0, 1, 2), weight = 1)
 
         button_1 = customtkinter.CTkButton(master=self.frame_right, image=wk_gaming_logo, text="WK Gaming", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78", command=self.button_event
                                         )
-        button_1.grid(row=0, column=0, columnspan=1, padx=20, pady=10, sticky="ew")
+        button_1.grid(row=0, column=0, columnspan=1, padx=20, pady=10, sticky="nsew")
 
         button_2 = customtkinter.CTkButton(master=self.frame_right, image=ekipa_wk_logo, text="Ekipa WK", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
-        button_2.grid(row=0, column=1, columnspan=1, padx=20, pady=10, sticky="ew")
+        button_2.grid(row=0, column=1, columnspan=1, padx=20, pady=10, sticky="nsew")
 
         button_3 = customtkinter.CTkButton(master=self.frame_right, image=warszawski_koks_logo, text="Warszawski Koks", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
-        button_3.grid(row=1, column=0, columnspan=1, padx=20, pady=10, sticky="ew")
+        button_3.grid(row=0, column=2, columnspan=1, padx=20, pady=10, sticky="nsew")
 
         button_4 = customtkinter.CTkButton(master=self.frame_right, image=wk_kuchnia_logo, text="Kuchnia WK", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
-        button_4.grid(row=1, column=1, columnspan=1, padx=20, pady=10, sticky="ew")
+        button_4.grid(row=1, column=1, columnspan=1, padx=20, pady=10, sticky="nsew")
 
         button_5 = customtkinter.CTkButton(master=self.frame_right, image=wk_dzik_logo, text="WK DZIK", width=130, height=buttons_height, border_width=0,
                                         corner_radius=10, compound="bottom", fg_color=("gray84", "gray25"), hover_color="#C77C78"
                                         )
-        button_5.grid(row=2, column=0, columnspan=1, padx=20, pady=10, sticky="ew")
+        button_5.grid(row=1, column=0, columnspan=1, padx=20, pady=10, sticky="nsew")
 
         self.switch_2.select()
 
     def button_event(self):
         print("Button pressed")
+
+    def raise_frame(self, frame):
+        frame.tkraise()
 
     def change_mode(self):
         if self.switch_2.get() == 1:
