@@ -7,7 +7,6 @@ import scrollable_frame
 import webbrowser
 
 # TODO
-# - as in test.py create frames for buttons to work
 # - figure out better way to display channel icons, maybe get them from somewhere else, not downlaod manually
 
 # FURTHER TODO
@@ -22,6 +21,8 @@ wk_dzik_pl_id = 'UCUr1w6sHtgj1JniKV8vWXMw'
 warszawski_koks_id = 'UC2AyohFiDUS3K98h5dJVfog'
 kuchnia_wk_id = 'UC4TYJ_RcqwL9lAZgkQlk11g'
 wk_gaming_id = 'UCeLWHfuhwnObampm0M6oH4w'
+
+channel_names = ['Ekipa WK', 'WK Dzik', 'Warszawski Koks', 'Kuchnia WK', 'WK Gaming']
 
 debug = True
 
@@ -85,7 +86,7 @@ class App(customtkinter.CTk):
         self.button_1 = customtkinter.CTkButton(master=self.frame_left,
                                                 text="Newest videos",
                                                 fg_color=("gray75", "gray30"),  # <- custom tuple-color
-                                                command=lambda:self.raise_frame(frame))
+                                                command=lambda:self.raise_frame(self.frame))
         self.button_1.grid(row=2, column=0, pady=10, padx=20)
 
         self.button_2 = customtkinter.CTkButton(master=self.frame_left,
@@ -102,12 +103,13 @@ class App(customtkinter.CTk):
         f2.columnconfigure(0, weight = 1)'''
 
         # ============ videos_page ============
-        frame = scrollable_frame.ScrollableFrame(self)
-        frame.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
-        frame.scrollable_frame.columnconfigure(0, weight = 1)
+        self.frame = scrollable_frame.ScrollableFrame(self)
+        self.frame.grid(row=0, column=1, sticky="nswe", padx=20, pady=20)
+        self.frame.scrollable_frame.columnconfigure(0, weight = 1)
+        self.frame.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
         for i in range(10):
-            button = customtkinter.CTkButton(master=frame.scrollable_frame,
+            button = customtkinter.CTkButton(master=self.frame.scrollable_frame,
                                                 text=f'Video {i + 1}',
                                                 height = 200,
                                                 width = 1030,
@@ -202,6 +204,13 @@ class App(customtkinter.CTk):
 
     def open_url(self, url):
         webbrowser.open_new_tab(url)
+
+    def _on_mousewheel(self, event):
+        self.frame.canvas.yview_scroll(event.delta, "units")
+
+    ''' On Windows, you bind to <MouseWheel> and you need to divide event.delta by 120 (or some other factor depending on how fast you want the scroll)
+        on OSX, you bind to <MouseWheel> and you need to use event.delta without modification
+        on X11 systems you need to bind to <Button-4> and <Button-5>, and you need to divide event.delta by 120 (or some other factor depending on how fast you want to scroll)'''
 
     def on_closing(self, event=0):
         self.destroy()
