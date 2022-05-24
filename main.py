@@ -2,6 +2,7 @@ from helper import youtube_api
 from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
+import config_parser
 
 # TODO
 # - create config parser for api key
@@ -14,18 +15,18 @@ from PIL import Image, ImageTk
 # - liked or marked channels
 # - marked watched videos => figure out a way to limit api invocations, save already downloaded data somewhere
 
-API_KEY = 'AIzaSyC-nrN3dQG2myUiOVRW7uOeCMib-YnJ344'
+API_KEY = config_parser.api_key
 ekipa_wk_id = 'UCnvrd6z-UgyX0n-Db7sQI4Q'
 wk_dzik_pl_id = 'UCUr1w6sHtgj1JniKV8vWXMw'
 warszawski_koks_id = 'UC2AyohFiDUS3K98h5dJVfog'
 kuchnia_wk_id = 'UC4TYJ_RcqwL9lAZgkQlk11g'
 wk_gaming_id = 'UCeLWHfuhwnObampm0M6oH4w'
 
-'''yt = youtube_api(API_KEY, ekipa_wk_id, 1)
+yt = youtube_api(API_KEY, warszawski_koks_id, 1)
 yt.get_channel_video_data()
 
 for vid in yt.videos:
-    print(vid)'''
+    print(vid)
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
