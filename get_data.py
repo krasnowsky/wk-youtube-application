@@ -1,47 +1,69 @@
+from turtle import down
+from urllib import response
 from helper import youtube_api
 import config_parser
 import requests
 import os
 
 API_KEY = config_parser.api_key
-ekipa_wk_id = 'UCnvrd6z-UgyX0n-Db7sQI4Q'
-wk_dzik_pl_id = 'UCUr1w6sHtgj1JniKV8vWXMw'
-warszawski_koks_id = 'UC2AyohFiDUS3K98h5dJVfog'
-kuchnia_wk_id = 'UC4TYJ_RcqwL9lAZgkQlk11g'
-wk_gaming_id = 'UCeLWHfuhwnObampm0M6oH4w'
 
 channel_names = ['ekipa_wk', 'wk_dzik_pl', 'warszawski_koks', 'kuchnia_wk', 'wk_gaming']
 channel_ids = ['UCnvrd6z-UgyX0n-Db7sQI4Q', 'UCUr1w6sHtgj1JniKV8vWXMw', 'UC2AyohFiDUS3K98h5dJVfog', 'UC4TYJ_RcqwL9lAZgkQlk11g', 'UCeLWHfuhwnObampm0M6oH4w']
 
-channels = {
-  "ekipa_wk": 'UCnvrd6z-UgyX0n-Db7sQI4Q',
-  "wk_dzik_pl": 'UCUr1w6sHtgj1JniKV8vWXMw',
-  "warszawski_koks": 'UC2AyohFiDUS3K98h5dJVfog',
-  "kuchnia_wk": 'UC4TYJ_RcqwL9lAZgkQlk11g',
-  "wk_gaming": 'UCeLWHfuhwnObampm0M6oH4w'
-}
+#			0		1			2				3		4
+#position - id, video_url, thumbnail_url, timestamp, title
+def read_data(video_number, position, channel_name):
+	data_path = f'/Users/krasnowsky/wk_youtube/data/{channel_name}/videos.data'
+	with open(data_path) as f:
+		lines = f.readlines()
+		return lines[video_number].split(';')[position]
 
-for i in range(5):
-    data = youtube_api(API_KEY, channel_ids[i], 1)
-    data.get_channel_video_data()
+def download_thumbnail(url, video_id, channel_name):
+	response = requests.get(url)
+	path = f'/Users/krasnowsky/wk_youtube/data/{channel_name}/thumbnails/{video_id}.png'
+	file = open(path, 'wb')
+	file.write(response.content)
+	file.close()
 
-    path = f'/Users/krasnowsky/wk_youtube/data/{channel_names[i]}/thumbnails/'
-    thumbnails_downloaded = os.listdir(path)
+def write_data(video, channel_name, flag):
+	path = f'/Users/krasnowsky/wk_youtube/data/{channel_name}/videos.data'
+	line = f'{video.id};{video.url};{video.thumbnail};{video.published_at};{video.title}\n'
+	if flag:
+		file = open(path, "a")
+		file.write(line)
+		file.close()
+	else:
+		with open(path, 'r+') as file:
+			content = file.read()
+			file.seek(0)
+			file.write(line + content)
 
-    path_1 = f'/Users/krasnowsky/wk_youtube/data/{channel_names[i]}/videos.data'
+def get_lines_amount(channel_name):
+	with open(f'/Users/krasnowsky/wk_youtube/data/{channel_name}/videos.data', 'r') as fp:
+		x = len(fp.readlines())
+		return x
 
+def get_data():
+	for i in range(5):
+		data = youtube_api(API_KEY, channel_ids[i], 1)
+		data.get_channel_video_data()
 
-    for vid in data.videos:
-        '''if vid.id + '.png' not in thumbnails_downloaded:
-        response = requests.get(vid.thumbnail)
-        path = f'/Users/krasnowsky/wk_youtube/data/{channel_names[i]}/thumbnails/{vid.id}.png'
+		if_file_empty = True
+		videos_in_file = get_lines_amount(channel_names[i])
+		if videos_in_file != 0:
+			if_file_empty = False
 
-        file = open(path, "wb")
-        file.write(response.content)
-        file.close()
-'''
-        data_file = open(path_1, "a")
-        data_file.write(f'{vid.id};{vid.url};{vid.thumbnail};{vid.published_at};{vid.title}\n')
-        data_file.close()
+		videos_ids = []
+
+		for line_number in range(videos_in_file):
+			videos_ids[line_number] = read_data(line_number, 0, channel_names[i])
+
+		for vid in data.videos:
+			if vid.id not in videos_ids:
+				download_thumbnail(vid.thumbnail, vid.id, channel_names[i])
+				write_data(vid, channel_names[i], if_file_empty)
+
+get_data()
+
 
 
