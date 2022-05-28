@@ -2,12 +2,15 @@ import json
 import requests
 from tqdm import tqdm
 from video import video
+from timestamp_manipulator import Timestamp
+import data_reader as dr
 
 class youtube_api:
 
-    def __init__(self, api_key, channel_id, limit):
+    def __init__(self, api_key, channel_id, channel_name, limit):
         self.api_key = api_key
         self.channel_id = channel_id
+        self.channel_name = channel_name
         self.videos = []
         self.limit = limit
 
@@ -17,7 +20,14 @@ class youtube_api:
 
     #extract all videos per channel
     def _get_channel_content(self, limit, check_all_pages=True):
-        url = f"https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=snippet,id&order=date"
+        saved_data = dr.get_lines_amount(self.channel_name)
+        if saved_data == 0:
+            url = f"https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=snippet,id&order=date"
+        else:
+            timestamp = dr.read_data(0, 3, self.channel_name)
+            timestamp_manipulator = Timestamp(str(timestamp))
+            new_date = timestamp_manipulator.get_new_timestamp()
+            url = f"https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=snippet,id&order=date&publishedAfter={new_date}"
 
         if limit is not None and isinstance(limit, int):
             url += "&maxResults=" + str(limit)
