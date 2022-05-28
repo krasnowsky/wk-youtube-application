@@ -1,7 +1,7 @@
 from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
-import scrollable_frame
+import helpers.scrollable_frame as scrollable_frame
 import webbrowser
 
 

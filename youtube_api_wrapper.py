@@ -1,9 +1,9 @@
 import json
 import requests
 from tqdm import tqdm
-from video import video
-from timestamp_manipulator import Timestamp
-import data_reader as dr
+from helpers.video import video
+from helpers.timestamp_manipulator import Timestamp
+import helpers.data_reader as dr
 
 class youtube_api:
 

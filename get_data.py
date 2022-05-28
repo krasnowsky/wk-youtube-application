@@ -1,8 +1,8 @@
 from turtle import down
 from urllib import response
 from youtube_api_wrapper import youtube_api
-import data_reader as dr
-import config_parser
+import helpers.data_reader as dr
+import helpers.config_parser as config_parser
 import requests
 import os
 
@@ -56,8 +56,5 @@ class Data:
 						self.write_data(vid, self.channel_names[i], if_file_empty)
 			else:
 				print(f"No new videos found on {self.channel_names[i]}")
-
-data = Data()
-data.get_data()
 
 
