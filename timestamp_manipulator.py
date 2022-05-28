@@ -37,7 +37,3 @@ class Timestamp:
         new_timestamp = self.adjust_timestamp()
         result = self.timestamp.replace(self.time, new_timestamp)
         return result
-
-stamp = Timestamp('2022-05-15T22:14:14Z')
-new = stamp.get_new_timestamp()
-print(new)
